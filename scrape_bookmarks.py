@@ -58,7 +58,7 @@ def download_videos():
     print("   Each video will be saved to downloads/video/twitter/[User]/")
     print("   Metadata files (.json) will be saved alongside each video.")
     print("   gallery-dl will skip files you already have.")
-    print("   Large videos (>500MB) and errors will be logged to skipped_tweets.log\n")
+    print("   Large videos (>100MB) and errors will be logged to skipped_tweets.log\n")
 
     skip_count = 0
     

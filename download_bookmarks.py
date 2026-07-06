@@ -288,12 +288,7 @@ def main():
         mp3_path, mp3_error = extract_mp3(video_path, metadata)
 
         if mp3_path:
-            if mp3_error is None and os.path.exists(mp3_path):
-                # Check if it was already existing (skipped)
-                # We can't easily tell, but it's fine to count as successful
-                print(f"  ✅ MP3 extracted (320kbps)")
-            else:
-                print(f"  ✅ MP3 extracted (320kbps)")
+            print(f"  ✅ MP3 extracted (320kbps)")
         else:
             print(f"  ⚠️  MP3 extraction failed: {mp3_error}")
 

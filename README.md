@@ -37,8 +37,8 @@ Originally built for sampling into hardware like the **Akai MPC**, it preserves 
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
-cd REPO_NAME
+git clone https://github.com/vesahc/beat-digger-x.git
+cd beat-digger-x
 
 # Create and activate a virtual environment (recommended)
 python3 -m venv venv
