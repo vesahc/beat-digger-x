@@ -6,9 +6,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "python"
 
   # GitHub Actions workflow dependencies
   - package-ecosystem: "github-actions"
@@ -16,6 +13,3 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "github-actions"
