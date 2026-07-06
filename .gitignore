@@ -1,0 +1,36 @@
+# Sensitive — NEVER commit
+cookies.txt
+
+# Agent Zero project config
+.a0proj/
+
+# Generated files
+bookmarks.txt
+bookmarks_metadata.json
+bookmark_catalog.txt
+download_results.json
+checkpoint.json
+to_unbookmark.txt
+to_unbookmark.csv
+unbookmark_log.json
+.gallery-dl-config.json
+skipped_tweets.log
+scrape_full.log
+archive.txt
+video_selections.json
+video_list.html
+video_list.csv
+
+# Downloads
+downloads/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
