@@ -72,8 +72,8 @@ def run_scrape(rescrape=False, extract_audio=False):
 
 def run_mp3():
     """Extract audio from downloaded videos."""
-    import download_bookmarks
-    download_bookmarks.main()
+    import extract_audio
+    extract_audio.main()
 
 
 def run_catalog(open_browser=False):

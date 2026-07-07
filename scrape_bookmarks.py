@@ -159,7 +159,7 @@ def main():
     print(f"📹 Videos downloaded: {video_count}")
     print(f"📄 Metadata files:   {meta_count}")
     print(f"📁 Location:          {VIDEO_DIR}/")
-    print(f"\n🚀 Next step: Run download_bookmarks.py to extract MP3 audio + build catalog")
+    print(f"\n🚀 Next step: Run beat_digger.py mp3 to extract MP3 audio")
 
 
 if __name__ == "__main__":

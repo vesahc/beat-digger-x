@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Twitter Bookmark Post-Processor
+Audio Extractor
 Reads video files downloaded by scrape_bookmarks.py, extracts their .json metadata
 sidecars for tweet URLs, converts audio to 320kbps MP3 for Akai MPC compatibility,
 and generates a CSV cross-reference file for unbookmarking.

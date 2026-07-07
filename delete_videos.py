@@ -75,7 +75,7 @@ def find_audio_file(tweet_id, username):
     if not AUDIO_DIR.exists():
         return None
 
-    # download_bookmarks.py strips _1/_2 suffixes from tweet_id for audio naming
+    # extract_audio.py strips _1/_2 suffixes from tweet_id for audio naming
     clean_id = tweet_id
     if clean_id.endswith("_1") or clean_id.endswith("_2"):
         clean_id = clean_id.rsplit("_", 1)[0]

@@ -158,7 +158,7 @@ Permanently removes video files, metadata sidecars, and extracted MP3s from disk
 ### Extract Audio (Optional)
 
 ```bash
-python3 download_bookmarks.py
+python3 extract_audio.py
 ```
 Extracts audio from downloaded videos to `downloads/audio/` as 320kbps MP3s (MPC-compatible).
 
