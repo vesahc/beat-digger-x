@@ -68,7 +68,7 @@ Twitter bookmarks are private. You need to authenticate with cookies.
 ```bash
 python3 scrape_bookmarks.py
 ```
-Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. Skips files you already have.
+Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. On re-runs, already-downloaded videos are skipped automatically. If you've run `init_archive.py` (step 3) and deleted videos via `delete_videos.py` (step 5), those are also skipped — only new bookmarks are downloaded.
 
 ### 3. Initialize Download Archive (First Time Only)
 
@@ -77,7 +77,7 @@ After your first scrape, build the archive so deleted videos are never re-downlo
 ```bash
 python3 init_archive.py
 ```
-Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once before scraping again. Future runs of `scrape_bookmarks.py` use the archive automatically.
+Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once — it's a one-time backfill for videos downloaded before the archive existed. After that, `scrape_bookmarks.py` automatically adds every new download to the archive, and `delete_videos.py` automatically adds deleted videos. You never need to run `init_archive.py` again.
 
 ### 4. Generate the Interactive Catalog
 
