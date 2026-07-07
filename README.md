@@ -77,7 +77,7 @@ After your first scrape, build the archive so deleted videos are never re-downlo
 ```bash
 python3 init_archive.py
 ```
-Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once before scraping again. Future runs of `scrape_bookmarks.py` use the archive automatically.
+Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once — it's a one-time backfill for videos downloaded before the archive existed. After that, `scrape_bookmarks.py` automatically adds every new download to the archive, and `delete_videos.py` automatically adds deleted videos. You never need to run `init_archive.py` again.
 
 ### 4. Generate the Interactive Catalog
 
