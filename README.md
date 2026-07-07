@@ -7,6 +7,8 @@ A complete toolkit to mass-download videos from your Twitter/X bookmarks, extrac
 
 Originally built for sampling into hardware like the **Akai MPC**, it preserves the original video files while providing workflow tools to tag, sort, and manage your collection.
 
+![Beat Digger X Catalog](screenshot.png)
+
 ---
 
 ## ✨ Features
