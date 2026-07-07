@@ -68,7 +68,7 @@ Twitter bookmarks are private. You need to authenticate with cookies.
 ```bash
 python3 scrape_bookmarks.py
 ```
-Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. Skips files you already have.
+Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. On re-runs, already-downloaded videos are skipped automatically. If you've run `init_archive.py` (step 3) and deleted videos via `delete_videos.py` (step 5), those are also skipped — only new bookmarks are downloaded.
 
 ### 3. Initialize Download Archive (First Time Only)
 
