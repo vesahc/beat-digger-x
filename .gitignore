@@ -8,6 +8,7 @@ cookies.txt
 to_unbookmark.csv
 unbookmark_log.json
 .gallery-dl-config.json
+.archive.sqlite3
 skipped_tweets.log
 scrape_full.log
 video_selections.json

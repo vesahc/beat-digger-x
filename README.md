@@ -22,6 +22,7 @@ Originally built for sampling into hardware like the **Akai MPC**, it preserves 
 - **Video Deletion**: Mark videos for deletion in the catalog UI, then run a script to permanently remove them from disk — including metadata sidecars, extracted MP3s, and empty folders.
 - **Bookmark Management**: Generate a cross-reference CSV of downloaded tweets and optionally clear them from your Twitter account.
 - **Safe Resumption**: Checkpointing and file-skip logic allow you to stop and resume downloads without losing progress.
+- **Download Archive**: A SQLite-based archive tracks every downloaded video so deleted videos are never re-downloaded on subsequent scrapes.
 
 ---
 
@@ -69,14 +70,23 @@ python3 scrape_bookmarks.py
 ```
 Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. Skips files you already have.
 
-### 3. Generate the Interactive Catalog
+### 3. Initialize Download Archive (First Time Only)
+
+After your first scrape, build the archive so deleted videos are never re-downloaded:
+
+```bash
+python3 init_archive.py
+```
+Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once before scraping again. Future runs of `scrape_bookmarks.py` use the archive automatically.
+
+### 4. Generate the Interactive Catalog
 
 ```bash
 python3 list_videos.py
 ```
 Generates `video_list.html`. Open it in your browser to browse, tag, and manage your videos.
 
-### 4. Delete Unwanted Videos (Optional)
+### 5. Delete Unwanted Videos (Optional)
 
 In the HTML catalog, check the **Del** checkbox on videos you want to remove, then click **Export JSON** to save your selections.
 
@@ -87,16 +97,16 @@ python3 delete_videos.py --dry-run
 # Delete after confirming
 python3 delete_videos.py
 ```
-Permanently removes video files, metadata sidecars, and extracted MP3s from disk. Cleans up empty directories. Re-run `python3 list_videos.py` to regenerate the catalog.
+Permanently removes video files, metadata sidecars, and extracted MP3s from disk. Cleans up empty directories. Deleted videos are added to the download archive so they won't re-download on future scrapes. Re-run `python3 list_videos.py` to regenerate the catalog.
 
-### 5. Extract Audio (Optional)
+### 6. Extract Audio (Optional)
 
 ```bash
 python3 download_bookmarks.py
 ```
 Extracts audio from downloaded videos to `downloads/audio/` as 320kbps MP3s (MPC-compatible).
 
-### 6. Clear Bookmarks (Optional)
+### 7. Clear Bookmarks (Optional)
 
 ```bash
 python3 clear_bookmarks.py

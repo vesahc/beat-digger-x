@@ -14,6 +14,8 @@ Usage:
 import argparse
 import json
 import os
+import re
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -21,6 +23,7 @@ from pathlib import Path
 SELECTIONS_FILE = "video_selections.json"
 VIDEO_DIR = Path("downloads/video")
 AUDIO_DIR = Path("downloads/audio")
+ARCHIVE_FILE = ".archive.sqlite3"
 # =====================================
 
 
@@ -89,6 +92,41 @@ def find_audio_file(tweet_id, username):
             return f
 
     return None
+
+
+def build_archive_key(video_path, metadata_path):
+    """Construct a gallery-dl archive key from metadata sidecar or filename."""
+    if metadata_path and metadata_path.exists():
+        try:
+            with open(metadata_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            tweet_id = data.get("tweet_id")
+            retweet_id = data.get("retweet_id", 0)
+            num = data.get("num")
+            if tweet_id is not None and num is not None:
+                return f"twitter{tweet_id}_{retweet_id}_{num}"
+        except (json.JSONDecodeError, OSError):
+            pass
+    # Fallback: parse from filename {tweet_id}_{num}.ext
+    match = re.match(r"(\d+)_(\d+)\.", video_path.name)
+    if match:
+        return f"twitter{match.group(1)}_0_{match.group(2)}"
+    return None
+
+
+def add_to_archive(key):
+    """Insert an archive key so gallery-dl skips this video on future scrapes."""
+    try:
+        conn = sqlite3.connect(ARCHIVE_FILE, timeout=60)
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS archive "
+            "(entry TEXT PRIMARY KEY) WITHOUT ROWID"
+        )
+        conn.execute("INSERT OR IGNORE INTO archive (entry) VALUES (?)", (key,))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"  ⚠️  Archive update failed: {e}")
 
 
 def cleanup_empty_dirs(start_path, stop_dirs):
@@ -173,6 +211,7 @@ Examples:
                 "video_path": None,
                 "metadata_path": None,
                 "audio_path": None,
+                "archive_key": None,
                 "status": "not_found",
             })
             continue
@@ -185,11 +224,14 @@ Examples:
         )
         audio_path = find_audio_file(tweet_id, username)
 
+        archive_key = build_archive_key(video_path, metadata_path)
+
         plan.append({
             "tweet_id": tweet_id,
             "video_path": video_path,
             "metadata_path": metadata_path,
             "audio_path": audio_path,
+            "archive_key": archive_key,
             "status": "found",
         })
 
@@ -276,6 +318,11 @@ Examples:
                 print(f"  ✅ Deleted audio: {p['audio_path'].name}")
             except Exception as e:
                 errors.append(f"Tweet {tid}: audio delete failed: {e}")
+
+        # Add to download archive so it's skipped on future scrapes
+        if p.get("archive_key"):
+            add_to_archive(p["archive_key"])
+            print(f"  📋 Added to archive: {p['archive_key']}")
 
         # Clean up empty directories (don't go above VIDEO_DIR)
         if cleanup_dir:
