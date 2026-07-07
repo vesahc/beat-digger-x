@@ -5,7 +5,6 @@ comments, keep/delete/sampled checkboxes, local file links, and import/export.
 Scans downloads/video/ for .mp4 files and their .json metadata sidecars.
 """
 
-import csv
 import html
 import json
 import os
@@ -491,13 +490,6 @@ applyState();
 
     print(f"Generated {OUTPUT_FILE} with {len(entries)} videos")
     print(f"Features: Keep/Delete/Sampled checkboxes, comments, file links, filters, import/export, column resize")
-
-    with open("video_list.csv", "w", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["URL", "Username", "Tweet ID", "Description", "Filename", "Size (MB)"])
-        for e in entries:
-            writer.writerow([e["url"], e["username"], e["tweet_id"], e["description"], e["filename"], e["size_mb"]])
-    print(f"Also generated video_list.csv")
 
 
 if __name__ == "__main__":

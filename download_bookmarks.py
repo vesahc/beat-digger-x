@@ -3,10 +3,10 @@
 Twitter Bookmark Post-Processor
 Reads video files downloaded by scrape_bookmarks.py, extracts their .json metadata
 sidecars for tweet URLs, converts audio to 320kbps MP3 for Akai MPC compatibility,
-and generates a human-readable catalog + CSV cross-reference file for unbookmarking.
+and generates a CSV cross-reference file for unbookmarking.
 
 Input:  downloads/video/*.mp4 + downloads/video/*.json (metadata sidecars)
-Output: downloads/audio/*.mp3, bookmark_catalog.txt, download_results.json, to_unbookmark.csv
+Output: downloads/audio/*.mp3, to_unbookmark.csv
 """
 
 import csv
@@ -21,9 +21,7 @@ from pathlib import Path
 # ============== CONFIG ==============
 VIDEO_DIR = Path("downloads/video")
 AUDIO_DIR = Path("downloads/audio")
-CATALOG_FILE = "bookmark_catalog.txt"
-RESULTS_FILE = "download_results.json"
-UNBOOKMARK_FILE = "to_unbookmark.csv"  # Changed to CSV for Excel/clickable links
+UNBOOKMARK_FILE = "to_unbookmark.csv"  # CSV for Excel/clickable links
 AUDIO_TIMEOUT = 120
 # =====================================
 
@@ -154,67 +152,6 @@ def get_video_duration(video_path):
     return "Unknown"
 
 
-def create_catalog(results):
-    """Create human-readable reference catalog."""
-    with open(CATALOG_FILE, "w", encoding="utf-8") as f:
-        f.write("=" * 70 + "\n")
-        f.write("TWITTER BOOKMARK DOWNLOAD CATALOG\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"Total videos processed: {results['total']}\n")
-        f.write("=" * 70 + "\n\n")
-
-        # Stats
-        f.write("SUMMARY\n")
-        f.write("-" * 70 + "\n")
-        f.write(f"  ✅ Video + MP3:    {len(results['successful'])}\n")
-        f.write(f"  📹 Video only:     {len(results['video_only'])}\n")
-        f.write(f"  ❌ Failed:         {len(results['failed'])}\n")
-        f.write(f"  ⏭️ Skipped:        {len(results.get('skipped', []))}\n\n")
-
-        # Successful downloads
-        if results["successful"]:
-            f.write("\n" + "=" * 70 + "\n")
-            f.write(f"✅ SUCCESSFULLY PROCESSED ({len(results['successful'])} items)\n")
-            f.write("=" * 70 + "\n\n")
-
-            for i, item in enumerate(results["successful"], 1):
-                f.write(f"{i}. {item['title']}\n")
-                f.write(f"   From: @{item.get('uploader', 'Unknown')}\n")
-                desc = item.get("description", "")
-                if desc:
-                    f.write(f"   Description: {desc[:200]}\n")
-                f.write(f"   Duration: {item.get('duration', 'Unknown')}\n")
-                f.write(f"   URL: {item['url']}\n")
-                f.write(f"   📹 Video: {item['video_file']}\n")
-                f.write(f"   🔊 Audio: {item['audio_file']}\n")
-                f.write(f"   Processed: {item['timestamp'][:19]}\n")
-                f.write("\n")
-
-        # Video-only (MP3 extraction failed)
-        if results["video_only"]:
-            f.write("\n" + "=" * 70 + "\n")
-            f.write(f"📹 VIDEO ONLY — MP3 EXTRACTION FAILED ({len(results['video_only'])} items)\n")
-            f.write("=" * 70 + "\n\n")
-            for item in results["video_only"]:
-                f.write(f"• {item['title']}\n")
-                f.write(f"  URL: {item['url']}\n")
-                f.write(f"  Video: {item['video_file']}\n")
-                f.write(f"  Error: {item.get('audio_error', 'Unknown')}\n\n")
-
-        # Failed (no metadata or no URL)
-        if results["failed"]:
-            f.write("\n" + "=" * 70 + "\n")
-            f.write(f"❌ FAILED — NO METADATA OR URL ({len(results['failed'])} items)\n")
-            f.write("=" * 70 + "\n\n")
-            for item in results["failed"]:
-                f.write(f"• {item.get('video_file', 'Unknown')}\n")
-                f.write(f"  Error: {item.get('error', 'Unknown')}\n\n")
-
-        f.write("\n" + "=" * 70 + "\n")
-        f.write("END OF CATALOG\n")
-        f.write("=" * 70 + "\n")
-
-
 def main():
     ensure_ffmpeg()
 
@@ -310,13 +247,6 @@ def main():
             entry["audio_error"] = mp3_error
             results["video_only"].append(entry)
 
-    # Save JSON results
-    with open(RESULTS_FILE, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2, ensure_ascii=False)
-
-    # Create human-readable catalog
-    create_catalog(results)
-
     # Export cross-reference file for unbookmarking (CSV format)
     all_processed = results["successful"] + results["video_only"]
     if all_processed:
@@ -339,9 +269,7 @@ def main():
     print(f"✅ Video + MP3:  {len(results['successful'])}")
     print(f"📹 Video only:   {len(results['video_only'])}")
     print(f"❌ Failed:       {len(results['failed'])}")
-    print(f"\n📄 Files created:")
-    print(f"   Catalog:         {CATALOG_FILE}")
-    print(f"   JSON results:    {RESULTS_FILE}")
+    print(f"\n📄 File created:")
     if all_processed:
         print(f"   Unbookmark list: {UNBOOKMARK_FILE}")
 
