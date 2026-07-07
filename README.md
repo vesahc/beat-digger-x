@@ -70,14 +70,14 @@ python3 scrape_bookmarks.py
 ```
 Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. On re-runs, already-downloaded videos are skipped automatically. If you've run `init_archive.py` (step 3) and deleted videos via `delete_videos.py` (step 5), those are also skipped — only new bookmarks are downloaded.
 
-### 3. Initialize Download Archive (First Time Only)
+### 3. Initialize Download Archive (Only If You Have Existing Downloads)
 
-After your first scrape, build the archive so deleted videos are never re-downloaded:
+**Skip this step if this is a fresh install** — `scrape_bookmarks.py` creates and maintains the archive automatically. Only run `init_archive.py` if you have videos from a previous version (before the archive feature existed) that you want to mark as already downloaded:
 
 ```bash
 python3 init_archive.py
 ```
-Scans existing metadata sidecars and populates `.archive.sqlite3`. Run this once — it's a one-time backfill for videos downloaded before the archive existed. After that, `scrape_bookmarks.py` automatically adds every new download to the archive, and `delete_videos.py` automatically adds deleted videos. You never need to run `init_archive.py` again.
+Scans existing metadata sidecars and populates `.archive.sqlite3` — a one-time backfill for pre-archive downloads. Going forward, `scrape_bookmarks.py` automatically adds every new download to the archive, and `delete_videos.py` automatically adds deleted videos. You never need to run `init_archive.py` again.
 
 ### 4. Generate the Interactive Catalog
 
