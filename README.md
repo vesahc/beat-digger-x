@@ -117,59 +117,20 @@ python3 beat_digger.py status
 
 ---
 
-## 📖 Detailed Usage (Individual Scripts)
+## 📖 Individual Scripts
 
-Prefer running scripts directly? All scripts still work standalone.
+Prefer running scripts directly? All scripts work standalone.
 
-### Scrape & Download Videos
+| Script | CLI equivalent | Description |
+|--------|---------------|-------------|
+| `scrape_bookmarks.py` | `scrape` | Download bookmarked videos via gallery-dl. Pass `--rescrape` to force fresh download. |
+| `extract_audio.py` | `mp3` | Extract 320kbps MP3 audio from downloaded videos. Also generates `to_unbookmark.csv`. |
+| `list_videos.py` | `catalog` | Generate the interactive HTML catalog (`video_list.html`). |
+| `delete_videos.py` | `delete` | Delete videos marked in the catalog, add to archive. Use `--dry-run` to preview. |
+| `clear_bookmarks.py` | `clear` | Open tweet URLs in browser batches for manual unbookmarking. |
+| `init_archive.py` | `archive` | One-time backfill for pre-archive installs. Fresh installs skip this. |
 
-```bash
-python3 scrape_bookmarks.py
-```
-Downloads all video media from your bookmarks to `downloads/video/twitter/[User]/`. On re-runs, already-downloaded videos are skipped automatically. Deleted videos (archived via `delete_videos.py`) are also skipped — only new bookmarks are downloaded. Pass `--rescrape` to force a fresh download.
-
-### Initialize Download Archive (Only If You Have Existing Downloads)
-
-**Skip this step if this is a fresh install** — `scrape_bookmarks.py` creates and maintains the archive automatically. Only run `init_archive.py` if you have videos from a previous version (before the archive feature existed) that you want to mark as already downloaded:
-
-```bash
-python3 init_archive.py
-```
-Scans existing metadata sidecars and populates `.archive.sqlite3` — a one-time backfill for pre-archive downloads. Going forward, `scrape_bookmarks.py` automatically adds every new download to the archive, and `delete_videos.py` automatically adds deleted videos. You never need to run `init_archive.py` again.
-
-### Generate the Interactive Catalog
-
-```bash
-python3 list_videos.py
-```
-Generates `video_list.html`. Open it in your browser to browse, tag, and manage your videos.
-
-### Delete Unwanted Videos (Optional)
-
-In the HTML catalog, check the **Del** checkbox on videos you want to remove, then click **Export JSON** to save your selections.
-
-```bash
-# Preview what would be deleted
-python3 delete_videos.py --dry-run
-
-# Delete after confirming
-python3 delete_videos.py
-```
-Permanently removes video files, metadata sidecars, and extracted MP3s from disk. Cleans up empty directories. Deleted videos are added to the download archive so they won't re-download on future scrapes. Re-run `python3 list_videos.py` to regenerate the catalog.
-
-### Extract Audio (Optional)
-
-```bash
-python3 extract_audio.py
-```
-Extracts audio from downloaded videos to `downloads/audio/` as 320kbps MP3s (MPC-compatible).
-
-### Clear Bookmarks (Optional)
-
-```bash
-python3 clear_bookmarks.py
-```
-Reads your cross-reference file and opens tweet URLs in browser batches for manual unbookmarking.
+> **Deleting videos:** In the HTML catalog, check the **Del** checkbox on videos you want to remove, click **Export JSON**, then run `delete_videos.py` (or `beat_digger.py delete`). Deleted videos are archived so they won't re-download on future scrapes.
 
 ---
 
