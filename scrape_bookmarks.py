@@ -19,6 +19,7 @@ COOKIES_FILE = "cookies.txt"
 VIDEO_DIR = Path("downloads/video")
 SKIP_LOG = "skipped_tweets.log"
 FULL_LOG = "scrape_full.log"
+ARCHIVE_FILE = ".archive.sqlite3"
 # =====================================
 
 
@@ -47,6 +48,7 @@ def download_videos():
     cmd = [
         "gallery-dl",
         "--cookies", COOKIES_FILE,
+        "--download-archive", ARCHIVE_FILE,  # Skip already-downloaded/deleted videos
         "--write-metadata",          # Save .json metadata sidecars
         "--filter", "extension in ('mp4', 'webm', 'm4v')",  # Videos only
         "--filesize-max", "100M",     # Skip files larger than 100MB (doesn't abort run)
